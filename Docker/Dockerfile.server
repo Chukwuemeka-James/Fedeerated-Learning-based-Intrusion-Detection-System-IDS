@@ -1,0 +1,23 @@
+# Use an official Python runtime as a parent image
+FROM python:3.9
+
+# Install pipenv
+RUN pip install pipenv
+
+# Set the working directory in the container to /app
+WORKDIR /app
+
+# Copy Pipfile and Pipfile.lock first (for caching)
+COPY Pipfile Pipfile.lock* /app/
+
+# Install dependencies system-wide
+RUN pipenv install --system --deploy --ignore-pipfile
+
+# Copy the rest of the application code
+COPY . /app
+
+# Expose port 8080 for server communication
+EXPOSE 8080
+
+# Run server.py when the container launches
+CMD ["python", "server.py"]
