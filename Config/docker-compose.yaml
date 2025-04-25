@@ -1,0 +1,59 @@
+version: '3.8'
+services:
+  server:
+    build: 
+      context: ..  # Set the build context to the parent directory of the config folder.
+      dockerfile: Docker/Dockerfile.server
+    volumes:
+      - .:/app
+    networks:
+      - app-network
+    ports:
+      - 8080:8080
+    container_name: FLb-IDS-Server
+
+  client1:
+    build: 
+      context: ..
+      dockerfile: Docker/Dockerfile.client
+    volumes:
+      - .:/app
+    networks:
+      - app-network
+    depends_on:
+      - server
+    environment:
+      - SERVER_ADDRESS=server:8080
+    container_name: FLb-IDS-client-1
+
+  client2:
+    build: 
+      context: ..
+      dockerfile: Docker/Dockerfile.client
+    volumes:
+      - .:/app
+    networks:
+      - app-network
+    depends_on:
+      - server
+    environment:
+      - SERVER_ADDRESS=server:8080
+    container_name: FLb-IDS-client-2
+
+  client3:
+    build: 
+      context: ..
+      dockerfile: Docker/Dockerfile.client
+    volumes:
+      - .:/app
+    networks:
+      - app-network
+    depends_on:
+      - server
+    environment:
+      - SERVER_ADDRESS=server:8080
+    container_name: FLb-IDS-client-3
+
+networks:
+  app-network:
+    driver: bridge
